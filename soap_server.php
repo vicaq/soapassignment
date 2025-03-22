@@ -1,27 +1,22 @@
 <?php
-ini_set("soap.wsdl_cache_enabled", "0"); // Disable WSDL cache
+ini_set("soap.wsdl_cache_enabled", "0"); // Disable WSDL caching
 
+// Handle direct WSDL requests
+if ($_SERVER['REQUEST_URI'] == "/soap_service.wsdl") {
+    header("Content-Type: text/xml");
+    readfile("soap_service.wsdl");
+    exit;
+}
+
+// SOAP Server Logic
 class BantuLodgesService {
     public function checkRoomAvailability($roomID) {
-        // Dummy logic for room availability (1 = Booked, 0 = Free)
-        $rooms = [
-            101 => 1, // Room 101 is booked
-            102 => 0, // Room 102 is free
-            103 => 1  // Room 103 is booked
-        ];
-        return isset($rooms[$roomID]) ? $rooms[$roomID] : -1; // -1 means Room ID not found
-    }
-
-    public function bookRoom($clientID, $roomID, $checkInDate, $checkOutDate) {
-        // Dummy confirmation response
-        return "Room $roomID successfully booked for Client $clientID from $checkInDate to $checkOutDate.";
+        return ($roomID == 101) ? 1 : 0; // Dummy response
     }
 }
 
-// Create a SOAP Server
-$wsdl = "http://localhost:1925"; // WSDL file location
-$options = ['uri' => "http://localhost:1925/soap_server.php"];
-$server = new SoapServer($wsdl, $options);
+$options = ['uri' => "http://localhost:1925/"];
+$server = new SoapServer("http://localhost:1925/soap_service.wsdl", $options);
 $server->setClass('BantuLodgesService');
 $server->handle();
 ?>

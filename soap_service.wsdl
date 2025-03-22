@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="BantuLodgesService"
+    targetNamespace="http://localhost:1925/"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="http://localhost:1925/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+
+    <types>
+        <xsd:schema targetNamespace="http://localhost:1925/">
+            <xsd:element name="checkRoomAvailabilityRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="roomID" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="checkRoomAvailabilityResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="status" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="bookRoomRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="clientID" type="xsd:int"/>
+                        <xsd:element name="roomID" type="xsd:int"/>
+                        <xsd:element name="checkInDate" type="xsd:string"/>
+                        <xsd:element name="checkOutDate" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="bookRoomResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="confirmation" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="checkRoomAvailabilityRequest">
+        <part name="parameters" element="tns:checkRoomAvailabilityRequest"/>
+    </message>
+    <message name="checkRoomAvailabilityResponse">
+        <part name="parameters" element="tns:checkRoomAvailabilityResponse"/>
+    </message>
+
+    <message name="bookRoomRequest">
+        <part name="parameters" element="tns:bookRoomRequest"/>
+    </message>
+    <message name="bookRoomResponse">
+        <part name="parameters" element="tns:bookRoomResponse"/>
+    </message>
+
+    <portType name="BantuLodgesServicePortType">
+        <operation name="checkRoomAvailability">
+            <input message="tns:checkRoomAvailabilityRequest"/>
+            <output message="tns:checkRoomAvailabilityResponse"/>
+        </operation>
+        <operation name="bookRoom">
+            <input message="tns:bookRoomRequest"/>
+            <output message="tns:bookRoomResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="BantuLodgesServiceBinding" type="tns:BantuLodgesServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="checkRoomAvailability">
+            <soap:operation soapAction="http://localhost:1925/checkRoomAvailability"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="bookRoom">
+            <soap:operation soapAction="http://localhost:1925/bookRoom"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+    </binding>
+
+    <service name="BantuLodgesService">
+        <port name="BantuLodgesServicePort" binding="tns:BantuLodgesServiceBinding">
+            <soap:address location="http://localhost:1925/soap_server.php"/>
+        </port>
+    </service>
+</definitions>
